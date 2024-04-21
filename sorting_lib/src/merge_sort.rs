@@ -1,36 +1,34 @@
-pub fn merge_sort<T: Clone, F>(arr: &[T], compare: F) -> Vec<T>
+pub fn merge_sort<T, F>(array: &mut [T], compare_func: &F)
 where
+    T: Copy + PartialOrd,
     F: Fn(&T, &T) -> bool,
 {
-    if arr.len() <= 1 {
-        return arr.to_vec();
+    let length = array.len();
+    if length <= 1 {
+        return;
     }
 
-    let mid = arr.len() / 2;
-    let (left, right) = arr.split_at(mid);
+    let middle = length / 2;
+    let (left_half, right_half) = array.split_at_mut(middle);
 
-    merge(merge_sort(left, &compare), merge_sort(right, &compare), compare)
-}
+    merge_sort(left_half, compare_func);
+    merge_sort(right_half, compare_func);
 
-fn merge<T, F>(mut left: Vec<T>, mut right: Vec<T>, compare: F) -> Vec<T>
-where
-    F: Fn(&T, &T) -> bool,
-{
-    let mut merged = Vec::with_capacity(left.len() + right.len());
-    let (mut left_idx, mut right_idx) = (0, 0);
+    let mut merged_array = Vec::with_capacity(length);
+    let (mut left_index, mut right_index) = (0, 0);
 
-    while left_idx < left.len() && right_idx < right.len() {
-        if compare(&left[left_idx], &right[right_idx]) {
-            merged.push(left[left_idx].clone());
-            left_idx += 1;
+    while left_index < left_half.len() && right_index < right_half.len() {
+        if compare_func(&left_half[left_index], &right_half[right_index]) {
+            merged_array.push(left_half[left_index]);
+            left_index += 1;
         } else {
-            merged.push(right[right_idx].clone());
-            right_idx += 1;
+            merged_array.push(right_half[right_index]);
+            right_index += 1;
         }
     }
 
-    merged.extend_from_slice(&left[left_idx..]);
-    merged.extend_from_slice(&right[right_idx..]);
+    merged_array.extend_from_slice(&left_half[left_index..]);
+    merged_array.extend_from_slice(&right_half[right_index..]);
 
-    merged
+    array.copy_from_slice(&merged_array);
 }
