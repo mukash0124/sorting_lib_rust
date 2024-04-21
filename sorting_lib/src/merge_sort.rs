@@ -1,6 +1,5 @@
-pub fn merge_sort<T, F>(arr: &[T], compare: F) -> Vec<T>
+pub fn merge_sort<T: Clone, F>(arr: &[T], compare: F) -> Vec<T>
 where
-    T: Clone,
     F: Fn(&T, &T) -> bool,
 {
     if arr.len() <= 1 {

@@ -1,6 +1,5 @@
-pub fn quicksort<T, F>(arr: &mut [T], compare: &F) -> Vec<T>
+pub fn quicksort<T: Clone, F>(arr: &mut [T], compare: &F) -> Vec<T>
 where
-    T: Clone,
     F: Fn(&T, &T) -> bool,
 {
     if arr.len() <= 1 {
