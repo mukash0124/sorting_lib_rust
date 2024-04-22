@@ -13,7 +13,7 @@ To use this library in your Rust project, add it as a dependency in your Cargo.t
 
 ```
 [dependencies]
-custom_sorting = { git = "https://github.com/yourusername/custom-sorting-library" }
+custom_sorting = { git = "https://github.com/mukash0124/sorting_lib_rust" }
 ```
 
 # Usage
