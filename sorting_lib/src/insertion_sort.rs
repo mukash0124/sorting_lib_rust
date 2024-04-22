@@ -1,16 +1,12 @@
-pub fn insertion_sort<T: Clone, F>(arr: &[T], compare: &F) -> Vec<T>
+pub fn insertion_sort<T: Clone, F>(array: &mut [T], compare_func: &F)
 where
     F: Fn(&T, &T) -> bool,
 {
-    let mut sorted = arr.to_vec();
-
-    for i in 1..sorted.len() {
-        let mut j = i;
-        while j > 0 && !compare(&sorted[j - 1], &sorted[j]) {
-            sorted.swap(j, j - 1);
-            j -= 1;
+    for i in 1..array.len() {
+        let mut current_index = i;
+        while current_index > 0 && compare_func(&array[current_index], &array[current_index - 1]) {
+            array.swap(current_index, current_index - 1);
+            current_index -= 1;
         }
     }
-
-    sorted
 }

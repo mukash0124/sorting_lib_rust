@@ -1,43 +1,32 @@
-pub fn quicksort<T: Clone, F>(arr: &mut [T], compare: &F) -> Vec<T>
+pub fn quick_sort<T, F>(array: &mut [T], compare_func: &F)
 where
+    T: Copy + PartialOrd,
     F: Fn(&T, &T) -> bool,
 {
-    if arr.len() <= 1 {
-        return arr.to_vec();
+    if array.len() <= 1 {
+        return;
     }
 
-    let pivot_idx = partition(arr, compare);
+    let pivot_element = &array[array.len() / 2];
 
-    let (left, right) = arr.split_at_mut(pivot_idx);
-    let pivot = &mut right[0];
+    let mut less_items = Vec::new();
+    let mut equal_items = Vec::new();
+    let mut greater_items = Vec::new();
 
-    let mut sorted_left = quicksort(left, compare);
-    let mut sorted_right = quicksort(&mut right[1..], compare);
-
-    sorted_left.push(pivot.clone());
-    sorted_left.append(&mut sorted_right);
-
-    sorted_left
-}
-
-fn partition<T, F>(arr: &mut [T], compare: &F) -> usize
-where
-    F: Fn(&T, &T) -> bool,
-{
-    let len = arr.len();
-    let pivot_idx = len / 2;
-    let last_idx = len - 1;
-
-    arr.swap(pivot_idx, last_idx);
-
-    let mut i = 0;
-    for j in 0..last_idx {
-        if compare(&arr[j], &arr[last_idx]) {
-            arr.swap(i, j);
-            i += 1;
+    for item in array.iter() {
+        if compare_func(item, pivot_element) {
+            less_items.push(*item);
+        } else if compare_func(pivot_element, item) {
+            greater_items.push(*item);
+        } else {
+            equal_items.push(*item);
         }
     }
 
-    arr.swap(i, last_idx);
-    i
+    quick_sort(&mut less_items, compare_func);
+    quick_sort(&mut greater_items, compare_func);
+
+    array[..less_items.len()].copy_from_slice(&less_items);
+    array[less_items.len()..less_items.len() + equal_items.len()].copy_from_slice(&equal_items);
+    array[less_items.len() + equal_items.len()..].copy_from_slice(&greater_items);
 }

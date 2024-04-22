@@ -1,20 +1,17 @@
-pub fn selection_sort<T: Clone, F>(arr: &[T], compare: F) -> Vec<T>
+pub fn selection_sort<T, F>(array: &mut [T], compare_func: &F)
 where
+    T: Copy + PartialOrd,
     F: Fn(&T, &T) -> bool,
 {
-    let mut sorted = arr.to_vec();
-
-    for i in 0..sorted.len() {
+    for i in 0..array.len() {
         let mut min_idx = i;
-        for j in (i + 1)..sorted.len() {
-            if compare(&sorted[j], &sorted[min_idx]) {
+        for j in i + 1..array.len() {
+            if compare_func(&array[j], &array[min_idx]) {
                 min_idx = j;
             }
         }
-        if i != min_idx {
-            sorted.swap(i, min_idx);
+        if min_idx != i {
+            array.swap(i, min_idx);
         }
     }
-
-    sorted
 }
